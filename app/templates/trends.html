@@ -1,0 +1,122 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-3">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h4>Historical Trends</h4>
+            <p class="text-muted small">
+                Track your lab values across completed reports.
+            </p>
+        </div>
+        <a href="{{ url_for('main.dashboard') }}"
+           class="btn btn-outline-secondary btn-sm">
+            Dashboard
+        </a>
+    </div>
+
+    <div class="alert alert-info small">
+        Charts appear when at least two completed reports contain
+        the same test with matching units. These charts do not
+        provide a diagnosis.
+    </div>
+
+    {% if trends_data %}
+    <div class="row g-3">
+        {% for item in trends_data %}
+        <div class="col-12 col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="mb-1">{{ item.name }}</h6>
+
+                    <p class="text-muted small mb-3">
+                        Unit: {{ item.unit }}
+                    </p>
+
+                    <div style="height:220px; position:relative;">
+                        <canvas id="chart{{ loop.index }}"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="card shadow-sm">
+        <div class="card-body text-center py-5">
+            <h6>No trends available yet</h6>
+            <p class="text-muted small">
+                Upload at least two completed reports containing
+                the same lab test and unit to view your trends.
+            </p>
+            <a href="{{ url_for('main.upload') }}"
+               class="btn btn-primary btn-sm">
+                Upload Report
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <p class="text-muted small mt-3">
+        Educational information only. Discuss your results
+        with a qualified healthcare professional.
+    </p>
+
+</div>
+
+{% if trends_data %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script id="trend-data" type="application/json">
+{{ trends_data | tojson }}
+</script>
+
+<script>
+    const trendData = JSON.parse(
+        document.getElementById("trend-data").textContent
+    );
+
+    trendData.forEach((item, index) => {
+        const canvas = document.getElementById("chart" + (index + 1));
+
+        new Chart(canvas, {
+            type: "line",
+
+            data: {
+                labels: item.points.map(point => point.date),
+
+                datasets: [{
+                    label: item.name + " (" + item.unit + ")",
+                    data: item.points.map(point => point.value),
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    tension: 0.25,
+                    fill: false
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                },
+
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endif %}
+
+{% endblock %}

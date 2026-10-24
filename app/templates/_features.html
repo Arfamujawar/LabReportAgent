@@ -1,0 +1,16 @@
+
+<h1 class="h2">Features</h1>
+<p class="dis">Explore the features of Lab Report Visit-Prep Explainer.</p>
+
+<div class="row g-3">
+    {% for n, s, d in FEATURES %}
+    <div class="col-md-6">
+        <div class="panel h-100">
+            <div>
+                <strong>{{ n }}</strong>
+            </div>
+            <p class="dis mb-0">{{ d }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>

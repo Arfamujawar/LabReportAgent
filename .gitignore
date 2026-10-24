@@ -1,0 +1,33 @@
+# Python environment and cache
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+
+# Secrets and local configuration
+.env
+
+# Local database and instance files
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploaded files and private reports
+uploads/
+demo reports/
+
+# Local logs
+*.log
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# API notes and downloaded archives
+apis.txt
+apis.zip
+
+# Unreviewed local materials and demo video
+all stuff/
+*.mp4

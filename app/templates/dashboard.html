@@ -1,0 +1,45 @@
+{% extends "base.html" %}{% block content %}<h1 class="h2">Welcome, {{ user.name.split()[0] }}</h1>
+{% if total==0 %}<div class="panel text-center py-5 mt-3">
+    <h2 class="h4">Upload your first report</h2>
+    <p>Your results, explanations, and activity will appear here once you do.</p><a class="btn btn-teal"
+        href="{{ url_for('main.upload') }}">Upload a report</a>
+</div>
+{% else %}<div class="row g-3 mt-1">
+    <div class="col-md-4">
+        <div class="panel">
+            <div class="dis">Reports uploaded</div>
+            <div class="h2 mb-0">{{ total }}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel">
+            <div class="dis">Processed successfully</div>
+            <div class="h2 mb-0">{{ done }}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel">
+            <div class="dis">Outside range in latest report</div>
+            <div class="h2 mb-0">{{ flagged if latest else '-' }}</div>
+        </div>
+    </div>
+</div>
+<h2 class="h4 mt-4">Recent reports</h2>
+<div class="panel p-0">
+    <table class="table mb-0">
+        <tbody>
+            {% for r in reports %}<tr>
+                <td><a href="{{ url_for('main.report', rid=r.id) }}">{{ r.title }}</a></td>
+                <td>{{ r.created.strftime('%Y-%m-%d') }}</td>
+                <td>{{ badge(r.status) }}</td>
+            </tr>{% endfor %}</tbody>
+    </table>
+</div>
+<p class="dis mt-2">
+<div class="mt-3">
+    <a href="{{ url_for('main.trends') }}" class="btn btn-outline-primary btn-sm">
+        View Historical Trends
+    </a>
+</div>
+</p>{% endif %}{%
+endblock %}

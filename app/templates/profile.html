@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block content %}<h1 class="h2">Profile</h1><div class="panel"><dl class="mb-0"><dt>Name</dt><dd>{{ user.name }}</dd><dt>Email</dt><dd>{{ user.email }}</dd><dt>Member since</dt><dd>{{ user.created.strftime('%Y-%m-%d') }}</dd></dl></div>
+<p class="dis mt-3">Editing the profile and deleting the account are not available yet.</p>{% endblock %}

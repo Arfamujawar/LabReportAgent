@@ -1,0 +1,21 @@
+:root{--navy:#0B2545;--teal:#0E8F8A;--teal-d:#0A6F6B;--bg:#F4F7F8;--ink:#1B2A3A;--mute:#5B6B7B;--line:#DCE4E8;--amber:#8A5A00;--red:#B42318;--green:#0B6B3A}
+body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+h1,h2,h3,.brand{font-family:Georgia,"Times New Roman",serif;color:var(--navy);letter-spacing:-.01em}
+a{color:var(--teal-d)}:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.brand{font-weight:700;font-size:1.25rem;text-decoration:none;color:var(--navy)}.brand b{color:var(--teal)}
+.btn-teal{background:var(--teal-d);color:#fff;border:0}.btn-teal:hover{background:var(--navy);color:#fff}
+.hero{background:var(--navy);color:#fff;padding:5rem 0}.hero h1{color:#fff;font-size:clamp(2rem,5vw,3.4rem);max-width:16ch}
+.hero p{color:#C9D6E2;max-width:48ch}
+.panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:1.25rem}
+.side{width:230px;background:var(--navy);min-height:100vh;padding:1.25rem 1rem;position:sticky;top:0;flex-shrink:0}
+.side a{display:block;color:#C9D6E2;padding:.5rem .75rem;border-radius:6px;text-decoration:none;font-size:.95rem}
+.side a:hover,.side a.on{background:#17375F;color:#fff}.side .brand{color:#fff;display:block;margin-bottom:1.5rem}
+.s{font-size:.78rem;font-weight:600;padding:.15rem .55rem;border-radius:99px;border:1px solid}
+.s-Available,.s-Completed,.s-normal{color:var(--green);border-color:#9AD3B4;background:#EAF7F0}
+.s-InDevelopment,.s-Processing,.s-Uploaded{color:#1D4F91;border-color:#A9C6EC;background:#EAF2FC}
+.s-ComingSoon{color:var(--mute);border-color:var(--line);background:#F0F3F5}
+.s-RequiresConfiguration,.s-low,.s-high{color:var(--amber);border-color:#E6C98F;background:#FDF5E4}
+.s-Failed{color:var(--red);border-color:#F0B4AE;background:#FDEDEB}
+.dis{font-size:.85rem;color:var(--mute)}
+@media(max-width:768px){.layout{flex-direction:column}.side{width:100%;min-height:0;position:static}}
+@media(prefers-reduced-motion:no-preference){.panel{transition:box-shadow .15s}.panel:hover{box-shadow:0 2px 10px rgba(11,37,69,.08)}}

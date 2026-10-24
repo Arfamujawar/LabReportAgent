@@ -1,0 +1,368 @@
+
+{% extends "base.html" %}
+
+{% block public %}
+
+<section class="hero">
+    <div class="container">
+        <h1>Understand your lab report before your appointment.</h1>
+
+        <p class="my-3">
+            Upload a report, check every extracted value yourself, and read
+            plain-language explanations next to the reference ranges printed
+            on your own results.
+        </p>
+
+        <a class="btn btn-teal btn-lg me-2"
+           href="{{ url_for('main.register') }}">
+            Get Started
+        </a>
+
+        <a class="btn btn-outline-light btn-lg"
+           href="{{ url_for('main.features') }}">
+            Explore Features
+        </a>
+    </div>
+</section>
+
+<div class="container py-5">
+
+    <!-- HOW IT WORKS -->
+    <section id="how">
+        <h2>How it works</h2>
+
+        <div class="row g-3 mt-1">
+            {% for t, d in [
+                ('Upload', 'Add a PDF, PNG, or JPG of your report. Files are checked before they are saved.'),
+                ('Review', 'Values, units, and ranges are extracted. Anything uncertain is flagged, never guessed.'),
+                ('Understand', "Each test gets a comparison with your report's own range and a plain-language explanation.")
+            ] %}
+            <div class="col-md-4">
+                <div class="panel h-100">
+                    <h3 class="h5">{{ t }}</h3>
+                    <p class="mb-0">{{ d }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+
+    <!-- START UNDERSTANDING BUTTON -->
+    <section class="mt-5 text-center" id="understanding-start">
+        <div class="panel p-4 p-md-5">
+            <h2 class="display-6 fw-bold">
+                Ready to understand your lab report?
+            </h2>
+
+            <p class="lead mt-3">
+                Discover how Lab Report Agent helps you understand medical
+                terms, review your results, and prepare for your doctor's visit.
+            </p>
+
+            <button
+                type="button"
+                class="btn btn-teal btn-lg mt-3"
+                onclick="showUnderstanding()">
+                Start Understanding
+            </button>
+        </div>
+    </section>
+
+
+    <!-- HIDDEN CONTENT: SHOWN AFTER BUTTON CLICK -->
+    <div id="understanding-content" hidden>
+
+        <!-- YOUR REPORT, CLEARLY EXPLAINED -->
+        <section class="mt-5" id="report-explained">
+            <div class="panel p-4 p-md-5">
+                <div class="row align-items-center g-4">
+
+                    <div class="col-lg-7">
+
+                        <h2 class="display-6 fw-bold">
+                            Your Report. Clearly Explained.
+                        </h2>
+
+                        <p class="lead mt-3">
+                            Lab results shouldn't leave patients confused.
+                            Understand medical terms, review your values,
+                            and prepare better questions for your next
+                            doctor's visit.
+                        </p>
+
+                        <!-- STEP 01 -->
+                        <div class="mt-4">
+
+                            <div class="d-flex gap-3 mb-3">
+                                <span class="text-info fs-4">01</span>
+
+                                <div>
+                                    <h3 class="h5 mb-1">
+                                        Upload with confidence
+                                    </h3>
+
+                                    <p class="mb-0">
+                                        Add your lab report and review the
+                                        values extracted from it.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- STEP 02 -->
+                            <div class="d-flex gap-3 mb-3">
+                                <span class="text-info fs-4">02</span>
+
+                                <div>
+                                    <h3 class="h5 mb-1">
+                                        Understand the numbers
+                                    </h3>
+
+                                    <p class="mb-0">
+                                        Explore plain-language explanations
+                                        and compare results with the report's
+                                        reference ranges.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- STEP 03 -->
+                            <div class="d-flex gap-3">
+                                <span class="text-info fs-4">03</span>
+
+                                <div>
+                                    <h3 class="h5 mb-1">
+                                        Prepare for your doctor
+                                    </h3>
+
+                                    <p class="mb-0">
+                                        Turn confusion into questions to
+                                        discuss with a qualified healthcare
+                                        professional.
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <a class="btn btn-teal btn-lg mt-4"
+                           href="#demo-steps"
+                           onclick="showDemoSteps(event)">
+                            Explore the Process
+                        </a>
+
+                    </div>
+
+
+                    <!-- RIGHT INFORMATION CARD -->
+                    <div class="col-lg-5">
+                        <div class="p-4 rounded-4 border border-info">
+
+                            <div class="text-info mb-2">
+                                YOUR HEALTH, YOUR UNDERSTANDING
+                            </div>
+
+                            <h3 class="h4">
+                                More clarity. Better conversations.
+                            </h3>
+
+                            <hr>
+
+                            <p>
+                                <strong>Understand</strong><br>
+                                Learn what common lab terms mean.
+                            </p>
+
+                            <p>
+                                <strong>Review</strong><br>
+                                Check extracted values and reference ranges.
+                            </p>
+
+                            <p class="mb-0">
+                                <strong>Ask</strong><br>
+                                Prepare questions for your next appointment.
+                            </p>
+
+                            <div class="mt-4 small text-secondary">
+                                Educational support only. Not a diagnosis
+                                or a replacement for professional medical advice.
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- COMPLETE FIVE-STEP WORKFLOW -->
+        <section class="mt-5" id="demo-steps">
+            <div class="panel p-4 p-md-5">
+
+                <h2 class="h3">
+                    Your first report, step by step
+                </h2>
+
+                <p class="mb-4">
+                    Follow this workflow to see how Lab Report Agent supports
+                    you in preparing for a conversation with your doctor.
+                </p>
+
+                <div class="mb-4">
+                    <h3 class="h5">
+                        01 — Upload your report
+                    </h3>
+
+                    <p>
+                        Sign in, open the report upload page, and select
+                        your lab report in PDF, PNG, or JPG format.
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="h5">
+                        02 — Review extracted values
+                    </h3>
+
+                    <p>
+                        Check each test name, result, unit, and reference range.
+                        Correct or verify information wherever the application
+                        allows it. Never assume an uncertain value is correct.
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="h5">
+                        03 — Explore explanations
+                    </h3>
+
+                    <p>
+                        Read the educational explanations and compare your
+                        results with the reference ranges printed on your report.
+                        These explanations are not a diagnosis.
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="h5">
+                        04 — Prepare questions for your doctor
+                    </h3>
+
+                    <p>
+                        Note the results or medical terms you want to discuss
+                        with a qualified healthcare professional.
+                    </p>
+                </div>
+
+                <div>
+                    <h3 class="h5">
+                        05 — Save your visit-preparation summary
+                    </h3>
+
+                    <p>
+                        If needed, export the available summary and take it
+                        to your appointment. Your doctor remains the
+                        decision-maker for interpreting results and
+                        recommending care.
+                    </p>
+                </div>
+
+                <a class="btn btn-teal mt-3"
+                   href="{{ url_for('main.register') }}">
+                    Create an Account to Begin
+                </a>
+
+            </div>
+        </section>
+
+    </div>
+    <!-- END HIDDEN CONTENT -->
+
+
+    <!-- PRIVACY AND SECURITY -->
+    <section class="mt-5" id="privacy">
+        <h2>Privacy and security</h2>
+
+        <p>
+            Reports stay in this application's local database and upload
+            folder, and only the account that uploaded a report can open it.
+            In this build no report data is sent to an external AI service.
+
+            <a href="{{ url_for('main.privacy') }}">
+                Read the details
+            </a>.
+        </p>
+    </section>
+
+
+    <!-- QUESTIONS / FAQ -->
+    <section class="mt-5" id="questions">
+        <h2>Questions</h2>
+
+        <details class="mb-2">
+            <summary>Does it diagnose anything?</summary>
+            No. It explains terms and compares values with the range on
+            your report. It never diagnoses or suggests treatment.
+        </details>
+
+        <details class="mb-2">
+            <summary>Is a real AI model used?</summary>
+            Not yet. Explanations come from built-in educational text and
+            are labelled as demo mode.
+        </details>
+
+        <details class="mb-2">
+            <summary>Does it read scanned reports?</summary>
+            Only if Tesseract OCR is installed on the machine running the app.
+        </details>
+    </section>
+
+</div>
+
+
+<!-- BUTTON INTERACTIONS -->
+<script>
+    function showUnderstanding() {
+        const content = document.getElementById(
+            'understanding-content'
+        );
+
+        content.hidden = false;
+
+        document.getElementById(
+            'understanding-start'
+        ).scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+
+        // Hide the initial button section after revealing the content.
+        document.getElementById(
+            'understanding-start'
+        ).hidden = true;
+
+        // Scroll to the newly revealed explanation.
+        setTimeout(() => {
+            document.getElementById(
+                'report-explained'
+            ).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }, 100);
+    }
+
+    function showDemoSteps(event) {
+        event.preventDefault();
+
+        const steps = document.getElementById('demo-steps');
+
+        steps.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+</script>
+
+{% endblock %}

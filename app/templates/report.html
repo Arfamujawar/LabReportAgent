@@ -1,0 +1,329 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.report-page {
+    max-width: 1100px;
+    margin: auto;
+    padding: 8px 0 24px;
+    color: #20313e;
+    font-size: 14px;
+}
+
+.test-card {
+    height: 100%;
+    background: #fff;
+    border: 1px solid #e4ebef;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 0;
+    box-sizing: border-box;
+}
+
+.test-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    overflow-wrap: anywhere;
+}
+
+.test-explanation {
+    color: #647681;
+    line-height: 1.5;
+    margin: 0 0 10px;
+}
+
+.result-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 5px 0;
+    margin: 0 -5px;
+}
+
+.result-table th {
+    color: #71818b;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 5px;
+    text-align: left;
+    vertical-align: bottom;
+}
+
+.result-table td {
+    width: 50%;
+    background: #f3f8f8;
+    padding: 8px 6px;
+    border-radius: 7px;
+    font-weight: 650;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+    vertical-align: top;
+}
+
+.result-value {
+    color: #087f72;
+}
+
+.test-extra {
+    margin-top: 10px;
+    color: #526571;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.test-extra summary {
+    cursor: pointer;
+    color: #087f72;
+    font-weight: 600;
+}
+
+.test-extra li {
+    margin: 5px 0;
+}
+
+.report-links a {
+    text-decoration: none;
+    color: #087f72;
+    margin-right: 14px;
+    font-size: 13px;
+}
+
+@media (max-width: 576px) {
+    .test-card {
+        padding: 10px;
+    }
+
+    .result-table th,
+    .result-table td {
+        padding: 6px 4px;
+        font-size: 11px;
+    }
+}
+</style>
+
+<div class="report-page">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <h1 class="h4 mb-0">{{ r.title }}</h1>
+        {{ badge(r.status) }}
+    </div>
+
+    <p class="text-secondary small mt-2">
+        Uploaded {{ r.created.strftime('%Y-%m-%d') }}.
+        <span class="report-links">
+            <a href="{{ url_for('main.report_file', rid=r.id) }}">
+                View original file
+            </a>
+            {% if rows %}
+            <a href="{{ url_for('main.summary', rid=r.id) }}">
+                Download summary
+            </a>
+            {% endif %}
+        </span>
+    </p>
+
+    {% if r.warning %}
+    <div class="alert alert-warning small">
+        {% for w in r.warning.split('\n') %}
+        <div>{{ w }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if rows %}
+
+    <p class="text-secondary small mb-3">
+        {{ mode }}. Check each result against your original report.
+    </p>
+
+    <div class="row g-3">
+        {% for x, e in rows %}
+        <div class="col-12 col-md-6">
+            <article class="test-card">
+
+                <div class="d-flex justify-content-between align-items-center gap-2">
+                    <h2 class="test-title">{{ x.name }}</h2>
+                    {{ badge(x.flag) }}
+                </div>
+
+                <p class="test-explanation">
+                    {{ e.what }}
+                </p>
+
+                <table class="result-table">
+                    <thead>
+                        <tr>
+                            <th>Your result</th>
+                            <th>Reference range on report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="result-value">
+                                {% if x.text_value %}
+                                    {{ x.text_value }}
+                                {% elif x.value is not none %}
+                                    {{ '%g'|format(x.value) }}
+                                    {{ x.unit or '' }}
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if x.low is not none and x.high is not none %}
+                                    {{ '%g'|format(x.low) }}–{{ '%g'|format(x.high) }}
+                                    {{ x.unit or '' }}
+                                {% else %}
+                                    Not applicable
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <details class="test-extra">
+                    <summary>More information &amp; doctor questions</summary>
+
+                    <div class="mt-2">
+                        <p>
+                            <strong>Result comparison:</strong>
+                            {{ e.comparison }}
+                        </p>
+
+                        <p>
+                            <strong>Why ordered:</strong>
+                            {{ e.why }}
+                        </p>
+
+                        <p>
+                            <strong>What can influence it:</strong>
+                            {{ e.factors }}
+                        </p>
+
+                        <strong>Questions for your doctor:</strong>
+                        <ul>
+                            {% for q in e.questions %}
+                            <li>{{ q }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </details>
+
+            </article>
+        </div>
+        {% endfor %}
+    </div>
+
+    <p class="text-secondary small mt-3">
+        {{ disclaimer }}
+    </p>
+
+    {% else %}
+
+    <div class="alert alert-info small">
+        No results are available to display for this report.
+        Check the original file and the extraction warning above.
+    </div>
+
+    {% endif %}
+
+
+    <!-- Human Review & Verification -->
+    <section class="card border-0 shadow-sm mt-4 mb-4">
+        <div class="card-body p-4">
+            <h2 class="h5 mb-2">Human Review &amp; Verification</h2>
+
+            <p class="text-secondary small">
+                Compare the extracted values with your original lab report.
+                Mark the review outcome and record any concerns.
+                This is an extraction check, not medical approval.
+            </p>
+
+            <div class="mb-3">
+                <span class="text-secondary small">Current review status:</span>
+                {% set review = r.review_status or 'Pending Review' %}
+
+                {% if review == 'Verified' %}
+                    <span class="badge bg-success">{{ review }}</span>
+                {% elif review == 'Needs Attention' %}
+                    <span class="badge bg-warning text-dark">{{ review }}</span>
+                {% else %}
+                    <span class="badge bg-secondary">Pending Review</span>
+                {% endif %}
+            </div>
+
+            {% if r.reviewed_at %}
+<p class="small text-secondary">
+    Last reviewed: {{ r.reviewed_at.strftime('%d %b %Y, %I:%M %p') }}
+</p>
+            {% endif %}
+
+            <form method="POST"
+                  action="{{ url_for('main.save_review', rid=r.id) }}">
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ csrf_token }}">
+
+                <div class="mb-3">
+                    <label for="review_status" class="form-label">
+                        Review outcome
+                    </label>
+
+                    <select class="form-select"
+                            id="review_status"
+                            name="review_status"
+                            required>
+                        <option value="Pending Review"
+                            {% if review == 'Pending Review' %}selected{% endif %}>
+                            Pending Review
+                        </option>
+                        <option value="Verified"
+                            {% if review == 'Verified' %}selected{% endif %}>
+                            Verified — values checked against original
+                        </option>
+                        <option value="Needs Attention"
+                            {% if review == 'Needs Attention' %}selected{% endif %}>
+                            Needs Attention — discrepancy or uncertainty
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="review_notes" class="form-label">
+                        Review notes
+                    </label>
+
+                    <textarea class="form-control"
+                              id="review_notes"
+                              name="review_notes"
+                              rows="3"
+                              maxlength="3000"
+                              placeholder="Record unclear values, extraction errors, or items that need checking...">{{ r.review_notes or '' }}</textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Save Review
+                </button>
+            </form>
+        </div>
+    </section>
+
+
+    <form method="post"
+          action="{{ url_for('main.delete', rid=r.id) }}"
+          onsubmit="return confirm('Delete this report and its file permanently?')">
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <button class="btn btn-outline-danger btn-sm">
+            Delete report
+        </button>
+    </form>
+
+</div>
+
+{% endblock %}

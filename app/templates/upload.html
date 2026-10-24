@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block content %}<h1 class="h2">Upload a report</h1>
+{% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+<form method="post" enctype="multipart/form-data" class="panel" style="max-width:560px" id="f"><input type="hidden"
+        name="csrf_token" value="{{ csrf_token }}">
+    <label class="form-label" for="file">PDF, PNG, or JPG, up to 10 MB</label>
+    <input class="form-control mb-3" id="file" type="file" name="file" accept=".pdf,.png,.jpg,.jpeg" required>
+    <button class="btn btn-teal" id="b">Upload and process</button><span id="p" class="ms-3 dis" role="status"></span>
+</form>
+<p class="dis mt-3">Scanned PDFs and images need Tesseract OCR installed. Check every extracted value against your
+    original report.</p>
+<script>document.getElementById('f').addEventListener('submit', () => { b.disabled = true; p.textContent = 'Processing your report...' })</script>
+{% endblock %}

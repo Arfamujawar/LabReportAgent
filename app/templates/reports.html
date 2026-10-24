@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+        <div>
+            <h2 class="mb-1">My Reports</h2>
+            <p class="text-muted mb-0">View, search, and manage your uploaded lab reports.</p>
+        </div>
+        <a href="{{ url_for('main.upload') }}" class="btn btn-primary">
+            Upload New Report
+        </a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endwith %}
+
+    <form method="GET" action="{{ url_for('main.reports') }}" class="row g-2 mb-4">
+        <div class="col-md-8">
+            <input type="search" name="q" class="form-control" placeholder="Search reports..."
+                value="{{ q|default('', true) }}">
+        </div>
+
+        <div class="col-md-3">
+            <select name="st" class="form-select">
+                <option value="">All statuses</option>
+                <option value="completed" {% if st|default('', true)|lower=='completed' %}selected{% endif %}>Completed
+                </option>
+                <option value="processing" {% if st|default('', true)|lower=='processing' %}selected{% endif %}>
+                    Processing</option>
+                <option value="failed" {% if st|default('', true)|lower=='failed' %}selected{% endif %}>Failed</option>
+            </select>
+        </div>
+
+        <div class="col-md-1 d-grid">
+            <button type="submit" class="btn btn-outline-primary">Search</button>
+        </div>
+    </form>
+
+    {% if reports %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Report</th>
+                    <th>Status</th>
+                    <th>Uploaded</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for r in reports %}
+                <tr>
+                    <td class="fw-semibold">{{ r.title or 'Untitled report' }}</td>
+
+                    <td>
+                        {% set status = (r.status or 'unknown')|lower %}
+                        {% if status == 'completed' %}
+                        <span class="badge bg-success">Completed</span>
+                        {% elif status == 'processing' %}
+                        <span class="badge bg-warning text-dark">Processing</span>
+                        {% elif status == 'failed' %}
+                        <span class="badge bg-danger">Failed</span>
+                        {% else %}
+                        <span class="badge bg-secondary">{{ r.status or 'Unknown' }}</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if r.created %}
+                        {{ r.created.strftime('%d %b %Y, %I:%M %p') }}
+                        {% else %}
+                        Not available
+                        {% endif %}
+                    </td>
+
+                    <td class="text-end">
+                        <div class="d-inline-flex flex-wrap justify-content-end gap-2">
+                            <a href="{{ url_for('main.report', rid=r.id) }}" target="_blank" rel="noopener noreferrer"
+                                class="btn btn-sm btn-outline-primary">
+                                View
+                            </a>
+
+
+
+                            <form method="POST" action="{{ url_for('main.delete', rid=r.id, q=q, status=st) }}"
+                                class="d-inline"
+                                onsubmit="return confirm('Permanently delete this report and its saved results?');">
+
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    Delete
+                                </button>
+                            </form>
+
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+    <div class="text-center py-5 border rounded">
+        <h5>No reports found</h5>
+        <p class="text-muted mb-3">Upload a lab report to see it listed here.</p>
+        <a href="{{ url_for('main.upload') }}" class="btn btn-primary">
+            Upload Your First Report
+        </a>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
